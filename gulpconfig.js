@@ -38,8 +38,8 @@ module.exports = {
             dest: 'httpdocs/assets/css/skins/',
         },
         {
-            src: 'resources/assets/js/lib/**/*',
-            dest: 'httpdocs/assets/js/lib/',
+            src: 'resources/assets/js/bit/**/*',
+            dest: 'httpdocs/assets/js/bit/',
         }
     ],
     autoprefix: [
