@@ -12,6 +12,7 @@ var debounce = require('throttle-debounce/debounce');
 
 //fitvids
 var fitVids = require("fitvids");
+var Instafeed = require("instafeed.js");
 
 //additionall
 var fresco = require("./_dep/fresco");
@@ -72,22 +73,6 @@ var fresco_plugins = require("./_dep/plugins");
 		$('html').toggleClass('nav');
 	}
 
-    /*
-    ybb.getInstagrams = function(){
-        $.ajax({
-            url: 'https://www.instagram.com/yankeebloodband/media/',
-            jsonp: "callback",
-            dataType: "jsonp",
-            data: {
-                format: "json"
-            },
-            success: function( response ) {
-                console.log( response );
-            }
-        });
-    }
-    */
-
 	$(document)
 		.ready(ybb.init)
 		.ready(ybb.fixie)
@@ -103,15 +88,13 @@ var fresco_plugins = require("./_dep/plugins");
 /**
  * Instagram Feed
  */
-/*
 var feed = new Instafeed({
     userId: 2000806203,
     get: 'user',
-    clientId: 'd06b6037f2254cbdba60b32b2b7d731b',
-    //accessToken: '2000806203.d06b603.d5f10f40fd994c8093a3e38f827de551',
+    clientId: 'c3d07e10164c4dd1a7d5ea028083fd34',
+    accessToken: '2000806203.1677ed0.084a28d80a694649b48fa67773ebf371',
     limit: 12,
     resolution: 'low_resolution'
 });
 
 feed.run();
-*/
