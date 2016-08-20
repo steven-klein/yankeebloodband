@@ -72,9 +72,26 @@ var fresco_plugins = require("./_dep/plugins");
 		$('html').toggleClass('nav');
 	}
 
+    /*
+    ybb.getInstagrams = function(){
+        $.ajax({
+            url: 'https://www.instagram.com/yankeebloodband/media/',
+            jsonp: "callback",
+            dataType: "jsonp",
+            data: {
+                format: "json"
+            },
+            success: function( response ) {
+                console.log( response );
+            }
+        });
+    }
+    */
+
 	$(document)
 		.ready(ybb.init)
-		.ready(ybb.fixie);
+		.ready(ybb.fixie)
+        .ready(ybb.getInstagrams);
 
 	$(window)
 		.scroll( throttle( 50, ybb.fixie ) )
