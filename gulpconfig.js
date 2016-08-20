@@ -36,6 +36,10 @@ module.exports = {
         {
             src: 'resources/assets/css/_lib/skins/**/*',
             dest: 'httpdocs/assets/css/skins/',
+        },
+        {
+            src: 'resources/assets/js/_lib/**/*',
+            dest: 'httpdocs/assets/js/_lib/',
         }
     ],
     autoprefix: [
