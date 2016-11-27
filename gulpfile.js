@@ -219,14 +219,7 @@ gulp.task('postcss', function() {
 gulp.task('handlebars', ['templates']);
 gulp.task('templates', ['data'], function () {
 
-    var src = [
-        'resources/views/pages/**/*.hbs'
-    ];
-
-    //skip the test.html page in production builds
-    if(!!util.env.production){
-        src.push('!resources/views/pages/**/test.hbs');
-    }
+    var src = config.handlebars.src;
 
     return gulp.src(src)
         .pipe(plumber({
@@ -246,7 +239,7 @@ gulp.task('templates', ['data'], function () {
             collapseWhitespace: true,
             removeComments: true
         }) : util.noop() )
-        .pipe(gulp.dest('httpdocs'))
+        .pipe(gulp.dest(config.handlebars.dest))
         .pipe(browserSync.stream());
 });
 

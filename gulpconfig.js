@@ -7,12 +7,12 @@ module.exports = {
     js: {
         entrypoint: 'app.js',
         src: 'resources/assets/js/',
-        dest: 'httpdocs/assets/js/'
+        dest: 'docs/assets/js/'
     },
     css: {
         entrypoint: 'app.css',
         src: 'resources/assets/css/',
-        dest: 'httpdocs/assets/css/'
+        dest: 'docs/assets/css/'
     },
     files: {
         src: [
@@ -23,21 +23,22 @@ module.exports = {
     copy: [
         {
             src: [
-                'resources/views/.htaccess'
+                'resources/views/CNAME',
+                'resources/views/favicon.ico'
             ],
-            dest: 'httpdocs/'
+            dest: 'docs/'
         },
         {
             src: [
-                'resources/assets/img/**/*.+(jpg|jpeg|gif|png|svg)'
+                'resources/assets/images/**/*.+(jpg|jpeg|gif|png|svg)'
             ],
-            dest: 'httpdocs/assets/img/'
+            dest: 'docs/assets/images/'
         },
         {
             src: [
                 'resources/assets/fonts/**/*'
             ],
-            dest: 'httpdocs/assets/fonts/'
+            dest: 'docs/assets/fonts/'
         }
     ],
     autoprefix: [
@@ -49,6 +50,10 @@ module.exports = {
     ],
     data: 'resources/views/data.json',
     handlebars: {
+        src: [
+            'resources/views/pages/**/*.hbs'
+        ],
+        dest: 'docs',
         ignorePartials: false,
         batch : ['resources/views/partials'],
         helpers : {

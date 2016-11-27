@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+<head>
+    <title>
+        {{#if title}}
+            {{title}}
+        {{else}}
+            Yankee Blood Band
+        {{/if}}
+    </title>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {{#if description}}
+    <meta name="description" content="{{description}}" />
+    {{/if}}
+    <link rel="stylesheet" href="/assets/css/app.css?v={{version}}" type="text/css"/>
+    {{#> head-block}}
+        {{!-- Custom <head> content per page could be added. --}}
+    {{/head-block}}
+</head>
+<body id="new">
+	<div id="main">
