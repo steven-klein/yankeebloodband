@@ -45,6 +45,12 @@ module.exports = {
                 'resources/assets/js/bit/**/*'
             ],
             dest: 'docs/assets/js/bit/'
+        },
+        {
+            src: [
+                'node_modules/font-awesome/fonts/*'
+            ],
+            dest: 'docs/assets/fonts/'
         }
     ],
     autoprefix: [

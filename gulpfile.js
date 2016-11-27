@@ -315,7 +315,7 @@ gulp.task('watch', ['default'], function() {
  */
 
  gulp.task('clean', function() {
-   return del.sync('httpdocs');
+   return del.sync('docs');
  });
 
 /**
