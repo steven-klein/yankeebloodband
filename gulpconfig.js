@@ -23,8 +23,8 @@ module.exports = {
     copy: [
         {
             src: [
-                'resources/views/CNAME',
-                'resources/views/favicon.ico'
+                'resources/CNAME',
+                'resources/favicon.ico'
             ],
             dest: 'docs/'
         },
