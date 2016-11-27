@@ -1,6 +1,6 @@
 {
   "name": "yankeebloodband.com",
-  "version": "1.0.0-1",
+  "version": "1.0.0",
   "description": "The Yankee Blood Band Website",
   "main": "gulpfile.js",
   "scripts": {
