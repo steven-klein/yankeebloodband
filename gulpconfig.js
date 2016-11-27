@@ -39,6 +39,12 @@ module.exports = {
                 'resources/assets/fonts/**/*'
             ],
             dest: 'docs/assets/fonts/'
+        },
+        {
+            src: [
+                'resources/assets/js/bit/**/*'
+            ],
+            dest: 'docs/assets/js/bit/'
         }
     ],
     autoprefix: [

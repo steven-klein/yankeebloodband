@@ -4,7 +4,7 @@
 
 //libs
 var jQuery = window.jQuery = require("jquery");
-var modernizr = window.Modernizr = require("./../../../node_modules/modernizr/modernizr");
+var modernizr = window.Modernizr = require("browsernizr");
 
 //throttle and debounce
 var throttle = require('throttle-debounce/throttle');
@@ -15,8 +15,8 @@ var fitVids = require("fitvids");
 var Instafeed = require("instafeed.js");
 
 //additionall
-var fresco = require("./_dep/fresco");
-var fresco_plugins = require("./_dep/plugins");
+var fresco = require("./modules/fresco");
+var fresco_plugins = require("./modules/plugins");
 
 //local
 (function($, window, undefinded){
