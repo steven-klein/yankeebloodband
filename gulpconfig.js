@@ -1,4 +1,9 @@
 module.exports = {
+    project: {
+        dev: {
+            hostname: 'brkstn.dev'
+        }
+    },
     js: {
         entrypoint: 'app.js',
         src: 'resources/assets/js/',
@@ -11,35 +16,28 @@ module.exports = {
     },
     files: {
         src: [
-            'httpdocs/**/*.html'
+            'resources/views/**/*.+(php|html|md|hbs|json)',
+            '.env'
         ]
     },
     copy: [
         {
             src: [
-                'resources/assets/images/**/*.jpg',
-                'resources/assets/images/**/*.jpeg',
-                'resources/assets/images/**/*.gif',
-                'resources/assets/images/**/*.png',
-                'resources/assets/images/**/*.svg'
+                'resources/views/.htaccess'
             ],
-            dest: 'httpdocs/assets/images/'
+            dest: 'httpdocs/'
         },
         {
-            src: 'resources/assets/fonts/**/*',
-            dest: 'httpdocs/assets/fonts/',
+            src: [
+                'resources/assets/img/**/*.+(jpg|jpeg|gif|png|svg)'
+            ],
+            dest: 'httpdocs/assets/img/'
         },
         {
-            src: 'node_modules/font-awesome/fonts/**/*',
-            dest: 'httpdocs/assets/fonts/',
-        },
-        {
-            src: 'resources/assets/css/_lib/skins/**/*',
-            dest: 'httpdocs/assets/css/skins/',
-        },
-        {
-            src: 'resources/assets/js/bit/**/*',
-            dest: 'httpdocs/assets/js/bit/',
+            src: [
+                'resources/assets/fonts/**/*'
+            ],
+            dest: 'httpdocs/assets/fonts/'
         }
     ],
     autoprefix: [
@@ -48,5 +46,23 @@ module.exports = {
         'ios > 6',
         'safari >= 5',
         'android >= 4'
-    ]
+    ],
+    data: 'resources/views/data.json',
+    handlebars: {
+        ignorePartials: false,
+        batch : ['resources/views/partials'],
+        helpers : {
+            entities : function(str){
+                var map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+
+                return str.replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+        }
+    }
 }

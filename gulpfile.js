@@ -4,9 +4,40 @@
  * Commonly you'll need to update src and dest paths
  */
 
-//Load .env
-require('dotenv').config();
+/**
+ * Modules
+ */
+ var gulp = require('gulp'),
+     //css
+     postcss = require('gulp-postcss'),
+     nano = require('gulp-cssnano'),
 
+     //JS
+     browserify = require('browserify'),
+     uglify = require('gulp-uglify'),
+
+     //html
+     handlebars = require('gulp-compile-handlebars'),
+     minify = require('gulp-htmlmin'),
+
+     //util
+     rename = require('gulp-rename'),
+     plumber = require('gulp-plumber'),
+     notify = require('gulp-notify'),
+     streamify = require('gulp-streamify'),
+     util = require('gulp-util'),
+     source = require('vinyl-source-stream'),
+     browserSync = require('browser-sync').create(),
+     merge = require('merge-stream'),
+     del = require('del'),
+     events = require('events'),
+     fs = require('fs'),
+     dotenv = require('dotenv').config({silent: true}); //Load .env - shut up if there's no .env we don't require it
+
+/**
+ * try to require something - fail silently if nothings found
+ * @method requireExists
+ */
 function requireExists( modulePath ){ // force require
     try {
         return require( modulePath );
@@ -16,8 +47,22 @@ function requireExists( modulePath ){ // force require
     }
 }
 
+function stackTrace(err) {
+    var stack = '';
+
+    if(typeof err !== 'object' || !err.hasOwnProperty('stack'))
+        return stack;
+
+    stack = '\nStacktrace:';
+    stack = '====================';
+    stack = err.stack;
+
+    return stack;
+}
+
+
 /**
- * Add project variables here
+ * Project variables - should be edited using external gulpconfig.js file
  * Include Trailing slashes
  * path is relative to this file.
  * @type {Object}
@@ -62,25 +107,13 @@ var config = Object.assign({
     ]
 }, requireExists('./gulpconfig') || {} );
 
-var gulp = require('gulp'),
-    //css
-    postcss = require('gulp-postcss'),
-    uglify = require('gulp-uglify'),
-    nano = require('gulp-cssnano'),
+//env overrides gulpconfig
+config.project.dev.hostname = process.env.BROWSERSYNC_PROXY || config.project.dev.hostname;
 
-    //JS
-    browserify = require('browserify'),
-
-    //util
-    rename = require('gulp-rename'),
-    plumber = require('gulp-plumber'),
-    notify = require('gulp-notify'),
-    streamify = require('gulp-streamify'),
-    source = require('vinyl-source-stream'),
-    browserSync = require('browser-sync').create(),
-    merge = require('merge-stream');
-
-//copy task
+/**
+ * copy taks handler
+ * loops through all copy ops and merges them into a single stream for output
+ */
 gulp.task('copy', function(){
 
     //if there are no copy tasks
@@ -99,6 +132,10 @@ gulp.task('copy', function(){
 	return merge(streams);
 });
 
+/**
+ * copy task - actually runs the copy op.
+ * @method copyTask
+ */
 var copyTask = function( src, dest ){
     return gulp.src( src )
         .pipe(plumber({
@@ -120,9 +157,9 @@ gulp.task('browserify', function() {
             cache: {},
             packageCache: {},
             entries: [config.js.src + config.js.entrypoint],
-            debug: true
+            debug: !util.env.production
         })
-        .bundle()
+        .bundle() // Add transformation tasks to the pipeline here.
         .on('error', function(err){
             console.log(err);
 
@@ -134,12 +171,10 @@ gulp.task('browserify', function() {
             this.emit('end');
         })
         .pipe(source(config.js.entrypoint))
-        // Add transformation tasks to the pipeline here.
+        .pipe( !!util.env.production ? streamify(uglify()) : util.noop() )
         .pipe(gulp.dest(config.js.dest))
-        .pipe(browserSync.stream())
-        .pipe(rename(config.js.entrypoint.replace('.js', '.min.js')))
-        .pipe(streamify(uglify()))
-        .pipe(gulp.dest(config.js.dest));
+        .pipe(browserSync.stream());
+
 });
 
 /**
@@ -148,8 +183,7 @@ gulp.task('browserify', function() {
 gulp.task('styles', ['postcss']);
 gulp.task('postcss', function() {
     // process cs
-    return (
-        gulp.src(config.css.src + config.css.entrypoint)
+    return gulp.src(config.css.src + config.css.entrypoint)
         .pipe(plumber({
             errorHandler: notify.onError({
                 title: "Gulp Styles",
@@ -159,9 +193,6 @@ gulp.task('postcss', function() {
         }))
         .pipe(postcss([
             require("postcss-import")(),
-            require("postcss-url")({
-                url: "inline"
-            }),
             require("postcss-cssnext")({
                 browsers: config.autoprefix
             }),
@@ -174,21 +205,98 @@ gulp.task('postcss', function() {
                 inline: true
             }
         }))
+        .pipe( !!util.env.production ? streamify(nano({
+            safe: true,
+            autoprefixer: {
+                browsers: config.autoprefix
+            }
+        })) : util.noop() )
         .pipe(gulp.dest(config.css.dest))
-        .pipe(browserSync.stream())
-        .pipe(rename(config.css.entrypoint.replace('.css', '.min.css')))
-        .pipe(streamify(nano({
-            safe: true
-        })))
-        .pipe(gulp.dest(config.css.dest))
-    );
+        .pipe(browserSync.stream());
 
+});
+
+gulp.task('handlebars', ['templates']);
+gulp.task('templates', ['data'], function () {
+
+    var src = [
+        'resources/views/pages/**/*.hbs'
+    ];
+
+    //skip the test.html page in production builds
+    if(!!util.env.production){
+        src.push('!resources/views/pages/**/test.hbs');
+    }
+
+    return gulp.src(src)
+        .pipe(plumber({
+            errorHandler: notify.onError({
+                title: "Gulp Templates",
+                message: "Error: <%= error.message %>",
+                sound: "Basso"
+            })
+        }))
+        .pipe(handlebars(config.templateData,
+            config.handlebars || {}
+        ))
+        .pipe(rename(function (path) {
+            path.extname = (path.extname === '' ) ? '' : '.html'
+        }))
+        .pipe( !!util.env.production ? minify({
+            collapseWhitespace: true,
+            removeComments: true
+        }) : util.noop() )
+        .pipe(gulp.dest('httpdocs'))
+        .pipe(browserSync.stream());
+});
+
+gulp.task('data', function(){
+
+    //error event emitter
+    var emitter = new events.EventEmitter();
+    emitter.on('error', function(msg, e){
+        notify({
+            title: "Gulp Browserify",
+            sound: "Basso"
+        }).write(msg + ".\n" + stackTrace(e));
+    });
+
+    //ensure config.data is set
+    if(!config.hasOwnProperty('data') || config.data === '')
+        return false;
+
+    try{
+        //ensure the file exists
+        fs.accessSync(config.data, fs.F_OK);
+
+        //set the config.templateData variable to the contents for
+        config.templateData = JSON.parse(
+            fs.readFileSync(config.data)
+        );
+
+    } catch (e) {
+        //emit a new error event
+        emitter.emit('error', 'Data file could not be read at: ' + config.data, e);
+
+        //set the templatedata to an empty object
+        config.templateData = {};
+    }
+
+    //get package info to expose a few things to our templates
+    //!!DONT over expose - these can go public.
+    var info = require('./package.json');
+    config.templateData = Object.assign({}, config.templateData, {
+        "production": !!util.env.production,
+        "version": info.version
+    }, (!!util.env.production ? {} : require('dotenv').config({silent: true}) ) );
+
+    return config.templateData;
 });
 
 /**
  * Watch
  */
-gulp.task('watch', ['styles', 'js'], function() {
+gulp.task('watch', ['default'], function() {
 
     //initialize browsersync
     browserSync.init({
@@ -202,12 +310,23 @@ gulp.task('watch', ['styles', 'js'], function() {
     gulp.watch(config.js.src + '**/*.js', ['js']);
 
     //watch for file changes if they are set
-    gulp.watch( config.files.src, browserSync.reload );
+    gulp.watch( config.files.src, ['templates'] );
+
+    //watch for changes on our data file
+    gulp.watch( config.data, ['templates'] );
 
 });
 
 /**
+ * clean
+ */
+
+ gulp.task('clean', function() {
+   return del.sync('httpdocs');
+ });
+
+/**
  * Default/Build Task
  */
-gulp.task('default', ['styles', 'js', 'watch']);
-gulp.task('build', ['styles', 'js', 'copy']);
+gulp.task('default', ['clean', 'styles', 'js', 'copy', 'templates']);
+gulp.task('build', ['default']);
