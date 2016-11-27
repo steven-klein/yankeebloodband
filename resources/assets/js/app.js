@@ -4,7 +4,6 @@
 
 //libs
 var jQuery = window.jQuery = require("jquery");
-var modernizr = window.Modernizr = require("browsernizr");
 
 //throttle and debounce
 var throttle = require('throttle-debounce/throttle');

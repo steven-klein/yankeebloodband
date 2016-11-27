@@ -4,7 +4,8 @@
   "description": "The Yankee Blood Band Website",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "gulp --production"
+    "test": "gulp --production",
+    "deploy": "gulp --production && npm version patch && gulp commit -am 'deploy' && git push"
   },
   "keywords": [
     "gulp",
@@ -42,13 +43,11 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "browsernizr": "^2.1.0",
     "fitvids": "^2.0.0",
     "font-awesome": "^4.7.0",
     "instafeed.js": "^1.4.1",
     "jquery": "^3.1.1",
     "milligram-cssnext": "^1.0.1",
-    "modernizr": "^3.3.1",
     "normalize-css": "^2.3.1",
     "throttle-debounce": "^1.0.1"
   },
