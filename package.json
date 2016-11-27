@@ -5,7 +5,9 @@
   "main": "gulpfile.js",
   "scripts": {
     "test": "gulp --production",
-    "preversion": "gulp --production && gulp commit -am 'deploy' && git push && git push --tags"
+    "build": "gulp --production",
+    "version": "npm run build && git add -A docs",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "gulp",
