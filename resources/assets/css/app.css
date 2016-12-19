@@ -414,19 +414,19 @@ h3{
 }
 
 #bio-content{
-    background: url('../images/layout/pattern_video.png') repeat top left rgba( 255,255,255, .8 );
+    background: #fff;
     text-transform: normal;
     color:#2b2b2b;
     text-shadow: none;
-    font-size:18px;
+    font-size: 1.6rem;
+    line-height: 1.5;
     text-align: left;
     width:100%;
-    margin:80px auto 0 auto;
+    margin: 40px auto 0 auto;
 }
 
 #bio-content .inner{
-
-    padding: 40px;
+    padding: 20px;
 }
 
 #bio-content .col{
@@ -922,6 +922,18 @@ html, body, #main{
 	position: relative;
 }
 
+@media (max-width: 768px){
+    #container{
+        min-height: 85%;
+    }
+}
+
+@media (max-width: 599px){
+    #container{
+        min-height: 65%;
+    }
+}
+
 header {
 	position: absolute;
 	bottom: 0;
@@ -972,7 +984,7 @@ header {
 }
 
 #container{
-	background-image: url('../images/YB10.jpg');
+	background-image: url('../images/Yankee-Blood-Neil-Krug-web.jpg');
 }
 
 #container:before{
@@ -982,26 +994,41 @@ header {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(0,0,0,0.65);
+	background: #000;
+    opacity: 0.15;
 }
 
 #bio{
-	background-image: url('../images/yb-trees-18.jpg');
+	background-image: none;
+    padding-top: 45%;
+}
+
+#bio > .main-wrapper{
+    margin-top: -25%;
 }
 
 #bio:before {
     content: '';
     position: absolute;
     top: 0;
-    bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(26, 72, 19, 0.25);
+    background: url('../images/Yankee-Blood-Seventies-web.jpg') no-repeat center top 60% transparent;
+    background-size: 100% auto;
+    padding-bottom: 45%;
 }
 
 #contact{
-	background-image: url('../images/yb-theatre.jpg');
-	background-position: center bottom;
+	background-image: url('../images/Yankee-Blood-Cohen-Brothers-l-web.jpg');
+	background-position: center top;
+    background-attachment: fixed;
+    transform: none;
+    will-change: transform;
+}
+
+.touch #contact{
+    background-attachment: scroll;
+    will-change: auto;
 }
 
 @media(min-width: 1440px){
@@ -1011,7 +1038,28 @@ header {
 }
 
 #music{
-	background-image: url('../images/YB5-blur.jpg');
+	background-image: url('../images/Yankee-Blood-Feist-web.jpg');
+    background-position: center center;
+    position: relative;
+    background-attachment: fixed;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+}
+
+.touch #music{
+    background-attachment: scroll;
+    will-change: auto;
+}
+
+#music:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    opacity: 0.10;
 }
 
 #videos{

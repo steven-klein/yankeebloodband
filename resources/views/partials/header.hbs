@@ -14,6 +14,23 @@
     <meta name="description" content="{{description}}" />
     {{/if}}
     <link rel="stylesheet" href="/assets/css/app.css?v={{version}}" type="text/css"/>
+    <!--TOUCH CHECK-->
+    <script>
+    (function touchCheck(){
+    var obj = document.getElementsByTagName('html')[0];
+    //replace the no-js with js
+    obj.className = obj.className.replace('no-js', 'js');
+    //check for touch
+    if (('ontouchstart' in window) ||
+         (navigator.maxTouchPoints > 0) ||
+         (navigator.msMaxTouchPoints > 0)) {
+            //add the touch class
+            obj.className = obj.className + " touch";
+    }else{
+    	obj.className = obj.className + " no-touch";
+    }
+    })();
+    </script>
     {{#> head-block}}
         {{!-- Custom <head> content per page could be added. --}}
     {{/head-block}}
